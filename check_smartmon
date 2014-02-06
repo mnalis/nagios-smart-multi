@@ -27,6 +27,7 @@
 
 
 import os.path
+from subprocess import Popen, PIPE
 import sys
 
 from optparse import OptionParser
@@ -111,7 +112,9 @@ def callSmartMonTools(path, device):
         # get health status
         cmd = "%s -H %s" % (path, device)
         vprint(3, "Get device health status: %s" % cmd)
-        (child_stdin, child_stdout, child_stderr) = os.popen3(cmd)
+        p = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True)
+        (child_stdin, child_stdout, child_stderr) = (p.stdin, p.stdout, p.stderr)
+
         line = child_stderr.readline()
         if len(line):
                 return (3, "UNKNOWN: call exits unexpectedly (%s)" % line, "",
@@ -124,7 +127,8 @@ def callSmartMonTools(path, device):
         # get temperature
         cmd = "%s -A %s" % (path, device)
         vprint(3, "Get device temperature: %s" % cmd)
-        (child_stdin, child_stdout, child_stderr) = os.popen3(cmd)
+        p = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True)
+        (child_stdin, child_stdout, child_stderr) = (p.stdin, p.stdout, p.stderr)
         line = child_stderr.readline()
         if len(line):
                 return (3, "UNKNOWN: call exits unexpectedly (%s)" % line, "",
