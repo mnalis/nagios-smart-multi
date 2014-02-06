@@ -1,0 +1,91 @@
+#!/usr/bin/perl -w
+# GPLv3 Matija Nalis <mnalis-perl@axe.tomsoft.hr> 2014-02-06
+# call multiple S.M.A.R.T. plugins and check status
+# call for all hard disks in system
+
+# FIXME vidi dodatne atribute na http://en.wikipedia.org/wiki/S.M.A.R.T.
+  
+
+use strict;
+
+my $check_ide_smart_cmd = '/usr/lib/nagios/plugins/check_ide_smart';
+my $check_smart_cmd = '/root/nagios_moj_smart/check_smart';	# FIXME path. autofind?
+my $check_smartmon_cmd = '/root/nagios_moj_smart/check_smartmon';	# FIXME path. autofind?
+
+my @exit_value = ();
+my @exit_code = ();
+my @exit_txt = ();
+my @exit_perf = ();
+
+# execute command if present
+sub exec_cmd
+{
+    my $cmd = shift;
+    my $args = join (' ', @_);
+    return `$cmd $args`;
+}
+
+# executes command and handle output
+sub handle_cmd
+{
+    my $disk = $_[$#_];	# FIXME kludge, get disk - assume always last parameter passed
+    
+    my $output = exec_cmd (@_);
+    my $exit_sig = $? & 127;
+    my $exit_code = $? >> 8;
+    
+    if ($exit_sig) {
+       $exit_code = 3; $output = "UNKNOWN: exit_sig=$exit_sig " . $output;
+    }
+    
+    
+    my $_code;
+    my $_msg;
+    my $_perf;
+    print "za cmd=" . join(' ',@_) . ", disk=$disk: \n";
+#    print "\tfull=$output, code=$?\n";
+    if ($output =~ /^(OK|CRITICAL|WARNING|UNKNOWN)\s*[-:]?\s+(.*?)(\|(.*))?$/) {
+         $_code = $1;
+         $_msg = $2;
+         $_perf = defined($4) ? $4 : '';
+         print "\tnasao output: code=$_code, msg=$_msg, perf=$_perf\n";
+    } else {
+         $exit_code = 3;
+         $_code = 'UNKNOWN';
+         $_msg = "unknown output: $output";
+         $_perf = '';
+         print "$_msg\n";
+    }
+
+    push @exit_value, $exit_code;
+    push @exit_code, $_code;
+    push @exit_txt, $_msg;
+    push @exit_perf, $_perf;
+}
+
+# FIXME - add argumente modul i za exclude diskova
+# FIXME my @disks = split (' ', glob "/dev/[hs]d*[a-z]");
+my @disks = qw (/dev/sda);
+
+
+foreach my $disk (@disks) {
+    handle_cmd ($check_ide_smart_cmd, '-1', '-n', '-d', $disk);
+    handle_cmd ($check_smart_cmd, '-i', 'ata', '-d', $disk);
+    handle_cmd ($check_smartmon_cmd, '-d', $disk);
+}
+
+my $max_exit_level = 0;
+my $output_code = '';
+my $output_text = '';
+my $perfdata = '';
+
+# FIXME izvuci iz arraya i slozi vars
+
+print "values = " . join (", ", @exit_value) . "\n\n";
+print "code = " . join (", ", @exit_code) . "\n\n";
+print "txt = " . join (", ", @exit_txt) . "\n\n";
+print "perf = " . join (", ", @exit_perf) . "\n\n";
+
+
+print "$output_code $output_text|$perfdata\n";
+exit $max_exit_level;
