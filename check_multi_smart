@@ -12,6 +12,9 @@ my $check_ide_smart_cmd = '/usr/lib/nagios/plugins/check_ide_smart';
 my $check_smart_cmd = '/root/nagios_moj_smart/check_smart';	# FIXME path. autofind?
 my $check_smartmon_cmd = '/root/nagios_moj_smart/check_smartmon';	# FIXME path. autofind?
 
+my $DEBUG = 1;
+
+my @exit_disk = ();
 my @exit_value = ();
 my @exit_code = ();
 my @exit_txt = ();
@@ -42,21 +45,22 @@ sub handle_cmd
     my $_code;
     my $_msg;
     my $_perf;
-    print "za cmd=" . join(' ',@_) . ", disk=$disk: \n";
+    $DEBUG > 2 && print "za cmd=" . join(' ',@_) . ", disk=$disk: \n";
 #    print "\tfull=$output, code=$?\n";
     if ($output =~ /^(OK|CRITICAL|WARNING|UNKNOWN)\s*[-:]?\s+(.*?)(\|(.*))?$/) {
          $_code = $1;
          $_msg = $2;
          $_perf = defined($4) ? $4 : '';
-         print "\tnasao output: code=$_code, msg=$_msg, perf=$_perf\n";
+         $DEBUG > 2 && print "\tnasao output: code=$_code, msg=$_msg, perf=$_perf\n";
     } else {
          $exit_code = 3;
          $_code = 'UNKNOWN';
          $_msg = "unknown output: $output";
          $_perf = '';
-         print "$_msg\n";
+         $DEBUG > 2 && print "$_msg\n";
     }
 
+    push @exit_disk, $disk;
     push @exit_value, $exit_code;
     push @exit_code, $_code;
     push @exit_txt, $_msg;
@@ -64,8 +68,10 @@ sub handle_cmd
 }
 
 # FIXME - add argumente modul i za exclude diskova
-# FIXME my @disks = split (' ', glob "/dev/[hs]d*[a-z]");
-my @disks = qw (/dev/sda);
+
+my @disks = glob("/dev/[hs]d*[a-z]");
+# FIXME kludge delme
+@disks = qw (/dev/sda /dev/sdb /dev/sdc);
 
 
 foreach my $disk (@disks) {
@@ -74,18 +80,44 @@ foreach my $disk (@disks) {
     handle_cmd ($check_smartmon_cmd, '-d', $disk);
 }
 
+# FIXME izvuci iz arraya i slozi vars
+
+if ($DEBUG > 0) {
+  print "\n\n\n";
+  print "disks = " . join (", ", @exit_disk) . "\n\n";
+  print "values = " . join (", ", @exit_value) . "\n\n";
+  print "code = " . join (", ", @exit_code) . "\n\n";
+  print "txt = " . join (", ", @exit_txt) . "\n\n";
+  print "perf = " . join (", ", @exit_perf) . "\n\n";
+}
+
+
 my $max_exit_level = 0;
 my $output_code = '';
 my $output_text = '';
 my $perfdata = '';
 
-# FIXME izvuci iz arraya i slozi vars
+my $last_disk = $exit_disk[0];
+my $last_msg = '';
+my $last_perf = '';
 
-print "values = " . join (", ", @exit_value) . "\n\n";
-print "code = " . join (", ", @exit_code) . "\n\n";
-print "txt = " . join (", ", @exit_txt) . "\n\n";
-print "perf = " . join (", ", @exit_perf) . "\n\n";
+# consolidate disk data
+sub consolidate {
+    my ($x) = @_;
+    print "consolidating at $x, last_disk=$last_disk\n";
+    print "full msg=$last_msg\n"; $last_msg = '';
+    print "full perf=$last_perf\n"; $last_perf = '';
 
+    $last_disk = $exit_disk[$x];
+}
+
+for my $x (0 .. $#exit_disk) {
+    consolidate($x) if ($exit_disk[$x] ne $last_disk);
+    $last_msg .= ($last_msg?', ':'') . $exit_txt[$x];
+    $last_perf .= ($last_perf?' ':'') . $exit_perf[$x];
+    print "x=$x, " . $exit_disk[$x] . "\n";
+}
+consolidate($#exit_disk);
 
 print "$output_code $output_text|$perfdata\n";
 exit $max_exit_level;
