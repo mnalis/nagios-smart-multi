@@ -8,6 +8,7 @@
 # =========================
 # Feb 3, 2009: Kurt Yoder - initial version of script 1.0
 # Jan 27, 2010: Philippe Genonceaux - modifications for compatibility with megaraid, use smartmontool version >= 5.39 
+# Feb 7, 2014: Matija Nalis - 'sat' support
 # Add this line to /etc/sudoers: "nagios        ALL=(root) NOPASSWD: /usr/sbin/smartctl"
 
 use strict;
@@ -62,7 +63,7 @@ if ($opt_d) {
 		exit $ERRORS{'UNKNOWN'};
 	}
 
-	if(grep {$opt_i eq $_} ('ata', 'scsi', 'megaraid')){
+	if(grep {$opt_i eq $_} ('ata', 'sat', 'scsi', 'megaraid')){
 		$interface = $opt_i;
                 if($interface eq 'megaraid'){
                     if(defined($opt_n)){
@@ -203,7 +204,7 @@ warn "(debug) output:\n@output\n\n" if $opt_debug;
 my @perfdata = qw//;
 
 # separate metric-gathering and output analysis for ATA vs SCSI SMART output
-if ($interface eq 'ata'){
+if ($interface eq 'ata' or $interface eq 'sat'){
 	foreach my $line(@output){
 		# get lines that look like this:
 		#    9 Power_On_Minutes        0x0032   241   241   000    Old_age   Always       -       113h+12m
@@ -300,10 +301,10 @@ exit $ERRORS{$exit_status};
 
 sub print_help {
 	print_revision($basename,$revision);
-	print "Usage: $basename (--device=<SMART device> --interface=(ata|scsi)|-h|-v) [--debug]\n";
+	print "Usage: $basename (--device=<SMART device> --interface=(sat|ata|scsi|megaraid)|-h|-v) [--debug]\n";
 	print "  --debug: show debugging information\n";
 	print "  -d/--device: a device to be SMART monitored, eg /dev/sda\n";
-	print "  -i/--interface: ata, scsi, megaraid, depending upon the device's interface type\n";
+	print "  -i/--interface: ata, sat, scsi, megaraid, depending upon the device's interface type\n";
         print "  -n/--number: where in the argument megaraid, it is the physical disk number within the MegaRAID controller\n";
 	print "  -h/--help: this help\n";
 	print "  -v/--version: Version number\n";
