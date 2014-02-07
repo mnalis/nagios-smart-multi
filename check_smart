@@ -88,7 +88,8 @@ else{
 	print_help();
 	exit $ERRORS{'UNKNOWN'};
 }
-my $smart_command = '/usr/bin/sudo /usr/sbin/smartctl';
+#my $smart_command = '/usr/bin/sudo /usr/sbin/smartctl';
+my $smart_command = '/usr/sbin/smartctl';	# we're already root
 my @error_messages = qw//;
 my $exit_status = 'OK';
 
