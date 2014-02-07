@@ -8,13 +8,17 @@ It was downloaded from:
 
 Upstream Author(s):
 
-    <put author's name and email here>
-    <likewise for another author>
+    Kurt Yoder
+    Philippe Genonceaux
+    daemogorgon.net
+    Matija Nalis <mnalis-debian@axe.tomsoft.hr>
 
 Copyright:
 
-    <Copyright (C) YYYY Firstname Lastname>
-    <likewise for another author>
+    <Copyright (C) 2006 daemogorgon.net>
+    <Public Domain 2009 Kurt Yoder>
+    <Public Domain 2010 Philippe Genonceaux>
+    <Copyright (C) 2013 Matija Nalis>
 
 License:
 
@@ -48,3 +52,8 @@ and is licensed under the GPL version 3, see above.
 
 # Please also look if there are files or directories which have a
 # different copyright/license attached and list them here.
+
+
+check_multi_smart is GPLv3+
+check_smart is Public Domain
+check_smartmon is GPLv2+

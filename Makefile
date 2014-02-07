@@ -1,7 +1,9 @@
+PLUGIN_DIR=$(DESTDIR)/usr/lib/nagios/plugins
 all:
 	@echo 'use "make install"' to install
 	
 install:
-	install -o root -g root -m 0755 check_multi_smart  check_smart check_smartmon /usr/local/bin/
+	test -d $(PLUGIN_DIR) || install -o root -g root -d $(PLUGIN_DIR)
+	install -o root -g root -m 0755 check_multi_smart  check_smart check_smartmon $(PLUGIN_DIR)
 		
 	
