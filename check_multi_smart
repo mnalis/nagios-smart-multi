@@ -71,7 +71,7 @@ sub handle_cmd
 
 my @disks = glob("/dev/[hs]d*[a-z]");
 # FIXME kludge delme
-@disks = qw (/dev/sda /dev/sdb /dev/sdc);
+@disks = qw (/dev/sda /dev/sdb /dev/sdg /dev/sdc);
 
 
 foreach my $disk (@disks) {
@@ -82,7 +82,7 @@ foreach my $disk (@disks) {
 
 # FIXME izvuci iz arraya i slozi vars
 
-if ($DEBUG > 0) {
+if ($DEBUG > 1) {
   print "\n\n\n";
   print "disks = " . join (", ", @exit_disk) . "\n\n";
   print "values = " . join (", ", @exit_value) . "\n\n";
@@ -106,7 +106,12 @@ sub consolidate {
     my ($x) = @_;
     print "consolidating at $x, last_disk=$last_disk\n";
     print "full msg=$last_msg\n"; $last_msg = '';
-    print "full perf=$last_perf\n"; $last_perf = '';
+    print "full perf=$last_perf\n\n"; $last_perf = '';
+
+    if ($exit_value[$x] > $max_exit_level) {	# final result is worst result we've had (0=OK, 1=WARNING, 2=CRITICAL, 3=UNKNOWN);
+        $max_exit_level = $exit_value[$x];
+        $output_code = $exit_code[$x];
+    }
 
     $last_disk = $exit_disk[$x];
 }
@@ -115,7 +120,7 @@ for my $x (0 .. $#exit_disk) {
     consolidate($x) if ($exit_disk[$x] ne $last_disk);
     $last_msg .= ($last_msg?', ':'') . $exit_txt[$x];
     $last_perf .= ($last_perf?' ':'') . $exit_perf[$x];
-    print "x=$x, " . $exit_disk[$x] . "\n";
+    $DEBUG > 1 && print "x=$x, " . $exit_disk[$x] . "\n";
 }
 consolidate($#exit_disk);
 
