@@ -3,6 +3,12 @@
 # call multiple S.M.A.R.T. plugins and check status
 # call for all hard disks in system
 
+# Installation:
+# Add to sudoers: nagios ALL=(root) NOPASSWD:/usr/local/bin/check_multi_smart
+# Add to nrpe.cfg: command[check_multi_smart]=sudo /usr/local/bin/check_multi_smart
+
+
+
 # FIXME vidi dodatne atribute na http://en.wikipedia.org/wiki/S.M.A.R.T.
   
 
