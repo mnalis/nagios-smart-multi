@@ -101,6 +101,13 @@ my $last_disk = $exit_disk[0];
 my $last_msg = '';
 my $last_perf = '';
 
+# check if we have new maximum value (0=OK, 3=UNKNOWN, 1=WARNING, 2=CRITICAL);
+sub new_max
+{
+    my ($current, $old) = @_;
+    if ($current > $old)  { return 1 } else { return 0 }
+}
+
 # consolidate disk data
 sub consolidate {
     my ($x) = @_;
@@ -108,7 +115,8 @@ sub consolidate {
     print "full msg=$last_msg\n"; $last_msg = '';
     print "full perf=$last_perf\n\n"; $last_perf = '';
 
-    if ($exit_value[$x] > $max_exit_level) {	# final result is worst result we've had (0=OK, 1=WARNING, 2=CRITICAL, 3=UNKNOWN);
+
+    if (new_max($exit_value[$x], $max_exit_level)) {	# final result is worst result we've had (0=OK, 3=UNKNOWN, 1=WARNING, 2=CRITICAL);
         $max_exit_level = $exit_value[$x];
         $output_code = $exit_code[$x];
     }
