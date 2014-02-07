@@ -8,11 +8,13 @@
 
 use strict;
 
-my $check_ide_smart_cmd = '/usr/lib/nagios/plugins/check_ide_smart';
-my $check_smart_cmd = '/root/nagios_moj_smart/check_smart';	# FIXME path. autofind?
-my $check_smartmon_cmd = '/root/nagios_moj_smart/check_smartmon';	# FIXME path. autofind?
+my @paths = qw( /root/nagios_moj_smart /usr/local/bin /usr/local/sbin /usr/lib/nagios/plugins );
 
-my $DEBUG = 1;
+my $check_ide_smart_cmd = 'check_ide_smart';	# from generic Debian Squeeze package nagios-plugins-basic
+my $check_smart_cmd = 'check_smart';		# patched on katara from http://exchange.nagios.org/directory/Plugins/System-Metrics/Storage-Subsystem/Check-SMART-status-modified/details
+my $check_smartmon_cmd = 'check_smartmon';	# patched on katara from https://www.monitoringexchange.org/inventory/Check-Plugins/Operating-Systems/Linux/check_smartmon
+
+my $DEBUG = 0;
 
 my @exit_disk = ();
 my @exit_value = ();
@@ -24,6 +26,12 @@ my @exit_perf = ();
 sub exec_cmd
 {
     my $cmd = shift;
+    
+    foreach my $p (@paths) {
+      if (-e "$p/$cmd") { $cmd = "$p/$cmd"; last; }
+    }
+    $DEBUG > 1 && print "using full path for $cmd\n";
+    
     my $args = join (' ', @_);
     return `$cmd $args`;
 }
