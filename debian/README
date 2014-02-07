@@ -1,8 +1,0 @@
-The Debian Package check-multi-smart
-----------------------------
-
-Additional S.M.A.R.T. checks for nagios
-Uses multiple tools to check advanced S.M.A.R.T. status of disks, 
-and by default check all disks in system unless you want some ignored.
-
- -- Matija Nalis <mnalis-debian@axe.tomsoft.hr>  Fri, 07 Feb 2014 19:31:19 +0100

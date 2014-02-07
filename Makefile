@@ -1,7 +1,7 @@
 PLUGIN_DIR=$(DESTDIR)/usr/lib/nagios/plugins
 
 all:
-	@echo 'use "make install" to install'
+	@echo 'use "make install" to install, or "dpkg-buildpackage -rfakeroot" to build debian package'
 	
 install: install_bin install_etc
 	@echo finished.

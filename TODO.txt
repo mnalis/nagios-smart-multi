@@ -1,25 +1,13 @@
 - vidi dodatne atribute na
   http://en.wikipedia.org/wiki/S.M.A.R.T.
 
--   /mn/ vidjeti 
-
-/usr/lib/nagios/plugins/check_ide_smart
-
-https://www.monitoringexchange.org/inventory/Check-Plugins/Operating-Systems/Linux/check_smartmon
-                                                                            
-http://exchange.nagios.org/directory/Plugins/System-Metrics/Storage-Subsystem/Check-SMART-status-modified/details
-        - sloziti multiple verziju koja sama detektira sve diskove, poziva
-          multiple external plugins. I add taint checks. i publish!         
-/dev/[hs]d*[a-z]
-          i perfdata za sve diskove da skuplja. i auto integrate            
-/usr/lib/nagios/plugins/check_ide_smart ako postoji
-
-
-
-- help dodaj
-- versioning dodaj
-
-
 - deploy po serverima tomsoft itd!
 
 - grep source for "FIXME"s
+
+- taint checks!
+
+- stavi da se sudo koristi samo za smartctl (i to sa punim pathom!) i/ili
+  za onaj nagios-basic plugin (vidi kako njegova dokumenatacija kaze prvo)
+
+- lintian ../check-multi-smart*.deb

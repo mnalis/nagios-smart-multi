@@ -1,3 +1,9 @@
+check-multi-smart (1.01) unstable; urgency=low
+
+  * added versioning and help
+
+ -- Matija Nalis <mnalis-debian@axe.tomsoft.hr>  Fri, 07 Feb 2014 22:48:14 +0100
+
 check-multi-smart (1.0) unstable; urgency=low
 
   * Initial Release.
