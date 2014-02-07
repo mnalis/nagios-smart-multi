@@ -101,31 +101,45 @@ my $last_disk = $exit_disk[0];
 my $last_msg = '';
 my $last_perf = '';
 
-# check if we have new maximum value (0=OK, 3=UNKNOWN, 1=WARNING, 2=CRITICAL);
-sub new_max
+# check if we have new maximum value 
+# note that it is more complicated than simple integer check, as UNKNOWN state is not worst!
+#
+# rating is (from better to worse): (0=OK, 3=UNKNOWN, 1=WARNING, 2=CRITICAL)
+# 
+sub is_new_max
 {
-    my ($current, $old) = @_;
-    if ($current > $old)  { return 1 } else { return 0 }
+    my ($cur, $old) = @_;
+    
+    $DEBUG > 2 && print "check $old <=> $cur\n";
+    die "invalid return value $old => $cur" if ($old > 3) or ($old < 0) or ($cur > 3) or ($cur < 0);
+    
+    if ($old == 0) { return 1 }			# if we were OK before, anything else is more important!
+    if ($old == 2) { return 0 }			# if we were CRITICAL before, nothing else could be more important
+    if ($old == 1) { return ($cur == 2) }	# if we were WARNING before, only CRITICAL is more important, others are not
+    if ($old == 3) { return ($cur != 0) }	# if we were UNKNOWN before, only OK is less important
 }
 
 # consolidate disk data
 sub consolidate {
     my ($x) = @_;
     print "consolidating at $x, last_disk=$last_disk\n";
-    print "full msg=$last_msg\n"; $last_msg = '';
-    print "full perf=$last_perf\n\n"; $last_perf = '';
+    print "full msg=$last_msg\n";
+    print "full perf=$last_perf\n\n";
 
-
-    if (new_max($exit_value[$x], $max_exit_level)) {	# final result is worst result we've had (0=OK, 3=UNKNOWN, 1=WARNING, 2=CRITICAL);
-        $max_exit_level = $exit_value[$x];
-        $output_code = $exit_code[$x];
-    }
-
+    $output_text .= "${last_disk}: ${last_msg}; ";
+    $perfdata .= "${last_disk}: ${last_perf}\n";
+    
+    $last_msg = '';
+    $last_perf = '';
     $last_disk = $exit_disk[$x];
 }
 
 for my $x (0 .. $#exit_disk) {
     consolidate($x) if ($exit_disk[$x] ne $last_disk);
+    if (is_new_max($exit_value[$x], $max_exit_level)) {	# final result is worst result we've had (0=OK, 3=UNKNOWN, 1=WARNING, 2=CRITICAL);
+        $max_exit_level = $exit_value[$x];
+        $output_code = $exit_code[$x];
+    }
     $last_msg .= ($last_msg?', ':'') . $exit_txt[$x];
     $last_perf .= ($last_perf?' ':'') . $exit_perf[$x];
     $DEBUG > 1 && print "x=$x, " . $exit_disk[$x] . "\n";
