@@ -1,5 +1,9 @@
-# ignore file for /usr/local/bin/check_multi_smart
+# ignore file for /usr/lib/nagios/plugins/check_multi_smart
+# place this file as /etc/check_multi_smart.ignore
+#
 # format is: <disk> <cmd1> [<cmd2>...]
+# no wildcards are allowed
+#
 # for example:
 # /dev/sdf check_ide_smart check_smart check_smartmon
 # /dev/sdi check_smartmon

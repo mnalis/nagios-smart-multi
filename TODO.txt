@@ -21,3 +21,5 @@ http://exchange.nagios.org/directory/Plugins/System-Metrics/Storage-Subsystem/Ch
 
 
 - deploy po serverima tomsoft itd!
+
+- grep source for "FIXME"s
