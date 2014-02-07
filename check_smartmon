@@ -3,6 +3,7 @@
 # -*- coding: iso8859-1 -*-
 #
 # $Id: version.py 133 2006-03-24 10:30:20Z fuller $
+# updated Matija Nalis <mnalis-debian@axe.tomsoft.hr> 2014-02-07 to fix os.popen3 deprecation
 #
 # check_smartmon
 # Copyright (C) 2006  daemogorgon.net
