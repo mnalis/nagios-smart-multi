@@ -1,5 +1,5 @@
 *~
-debian/check-multi-smart.debhelper.log
-debian/check-multi-smart.substvars
-debian/check-multi-smart/
 debian/files
+debian/nagios-smart-multi.debhelper.log
+debian/nagios-smart-multi.substvars
+debian/nagios-smart-multi/
