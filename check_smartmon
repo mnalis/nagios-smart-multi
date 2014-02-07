@@ -201,7 +201,7 @@ def createReturnInfo(healthStatus, temperature, warningThreshold,
         elif temperature > warningThreshold:
                 return (1, "WARNING: device temperature (%d) exceeds warning temperature threshold (%s)" % (temperature, warningThreshold))
         else:
-                return (0, "OK: device is functional and stable (temperature: %d)" % temperature)
+                return (0, "OK: device is functional and stable|temperature: %d" % temperature)
         # fi
 # end
 
