@@ -11,7 +11,7 @@ Homepage: <insert the upstream URL, if relevant>
 Package: check-multi-smart
 Architecture: all
 Depends: ${misc:Depends}, ${perl:Depends}, ${python:Depends}, smartmontools
-Suggests: nagios3
+Suggests: nagios3|nagios-nrpe-server
 Enhances: nagios-plugins-basic
 Recommends: nagios-plugins-basic
 Description: nagios plugin to check S.M.A.R.T. status of disks

@@ -20,6 +20,7 @@ set -e
 
 case "$1" in
     configure)
+    	test -x /etc/init.d/nagios-nrpe-server && /etc/init.d/nagios-nrpe-server reload
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
