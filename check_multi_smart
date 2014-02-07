@@ -69,15 +69,17 @@ sub handle_cmd
 
 # FIXME - add argumente modul i za exclude diskova
 
+{
 my @disks = glob("/dev/[hs]d*[a-z]");
 # FIXME kludge delme
-@disks = qw (/dev/sda /dev/sdb /dev/sdg /dev/sdc);
+@disks = qw (/dev/sdb /dev/sda /dev/sdg /dev/sdc);
 
 
 foreach my $disk (@disks) {
     handle_cmd ($check_ide_smart_cmd, '-1', '-n', '-d', $disk);
     handle_cmd ($check_smart_cmd, '-i', 'ata', '-d', $disk);
     handle_cmd ($check_smartmon_cmd, '-d', $disk);
+}
 }
 
 # FIXME izvuci iz arraya i slozi vars
@@ -101,6 +103,8 @@ my $last_disk = $exit_disk[0];
 my $last_msg = '';
 my $last_perf = '';
 
+my @all = ();
+
 # check if we have new maximum value 
 # note that it is more complicated than simple integer check, as UNKNOWN state is not worst!
 #
@@ -122,18 +126,19 @@ sub is_new_max
 # consolidate disk data
 sub consolidate {
     my ($x) = @_;
-    print "consolidating at $x, last_disk=$last_disk\n";
-    print "full msg=$last_msg\n";
-    print "full perf=$last_perf\n\n";
+    $DEBUG > 1 && print "consolidating at $x, last_disk=$last_disk\n";
+    $DEBUG > 1 && print "full msg=$last_msg\n";
+    $DEBUG > 1 && print "full perf=$last_perf\n\n";
 
-    $output_text .= "${last_disk}: ${last_msg}; ";
-    $perfdata .= "${last_disk}: ${last_perf}\n";
+    $last_msg =~ s/\n/, /g;
+    push @all, { disk=> $last_disk, msg => $last_msg, perf => $last_perf };
     
     $last_msg = '';
     $last_perf = '';
     $last_disk = $exit_disk[$x];
 }
 
+# consolidate all checks (group by same disk)
 for my $x (0 .. $#exit_disk) {
     consolidate($x) if ($exit_disk[$x] ne $last_disk);
     if (is_new_max($exit_value[$x], $max_exit_level)) {	# final result is worst result we've had (0=OK, 3=UNKNOWN, 1=WARNING, 2=CRITICAL);
@@ -145,6 +150,34 @@ for my $x (0 .. $#exit_disk) {
     $DEBUG > 1 && print "x=$x, " . $exit_disk[$x] . "\n";
 }
 consolidate($#exit_disk);
+
+
+# join output for multiple disks if it is the same
+my $prev_output = '';
+my @prev_disks = ();
+@all = sort {($a->{msg} cmp $b->{msg}) || $a->{disk} cmp $b->{disk} } @all;	# sort by output message (and disk)
+
+
+# merge multiple messages for different disks
+sub merge_msg
+{
+    return unless $prev_output;
+    
+    $DEBUG > 1 && print "merge_msg prev=$prev_output for disks " . join(', ', @prev_disks) . "\n";
+    @prev_disks = ();
+}
+
+for my $x (0 .. $#all) {
+    if ($prev_output ne $all[$x]->{msg}) { merge_msg() }
+    $perfdata .= $all[$x]->{disk} . ': ' .  $all[$x]->{perf};
+    $DEBUG > 2 && print "x=$x, disk=" . $all[$x]->{disk} . ", msg=" . $all[$x]->{msg} . "\n";
+    $prev_output = $all[$x]->{msg};
+    push @prev_disks, $all[$x]->{disk};
+}
+merge_msg();
+
+#use Data::Dumper;
+#print Dumper(\@all);
 
 print "$output_code $output_text|$perfdata\n";
 exit $max_exit_level;
