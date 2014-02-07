@@ -9,7 +9,7 @@ install: install_bin install_etc
 install_bin:
 	test -d $(PLUGIN_DIR) || install -o root -g root -d $(PLUGIN_DIR)
 	install -o root -g root -m 0755 check_multi_smart  check_smart check_smartmon $(PLUGIN_DIR)
-	sed -e 's,/home/mnalis/tomsoft_source/check-multi-smart-1.0,,' < check_multi_smart > $(PLUGIN_DIR)/check_multi_smart
+	sed -e 's,/home/mnalis/tomsoft_source/nagios-smart-multi ,,' < check_multi_smart > $(PLUGIN_DIR)/check_multi_smart
 	
 install_etc:	
 	test -d  $(DESTDIR)/etc/sudoers.d || install -o root -g root -m 0755 -d $(DESTDIR)/etc/sudoers.d

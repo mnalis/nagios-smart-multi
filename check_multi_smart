@@ -16,7 +16,7 @@ our $VERSION='1.01';
 
 use strict;
 
-my @paths = qw( /home/mnalis/tomsoft_source/check-multi-smart-1.0 /usr/local/bin /usr/local/sbin /usr/lib/nagios/plugins );	# NB hardcoded devel path will be removed on "make install"
+my @paths = qw( /home/mnalis/tomsoft_source/nagios-smart-multi /usr/local/bin /usr/local/sbin /usr/lib/nagios/plugins );	# NB hardcoded devel path will be removed on "make install"
 my $ignore_file = '/etc/check_multi_smart.ignore';
 
 my $check_ide_smart_cmd = 'check_ide_smart';	# from generic Debian Squeeze package nagios-plugins-basic
@@ -33,7 +33,7 @@ my @exit_perf = ();
 
 
 # parse command line options 
-if ($ARGV[0] =~ /^(-h|--help)$/) {
+if (defined($ARGV[0]) and $ARGV[0] =~ /^(-h|--help)$/) {
     print <<EOF;
 check_multi_smart v$VERSION
 
