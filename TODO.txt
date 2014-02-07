@@ -16,6 +16,8 @@ http://exchange.nagios.org/directory/Plugins/System-Metrics/Storage-Subsystem/Ch
 
 
 
+- help dodaj
+- versioning dodaj
 
 
 - deploy po serverima tomsoft itd!
