@@ -76,7 +76,7 @@ my @disks = glob("/dev/[hs]d*[a-z]");
 
 foreach my $disk (@disks) {
     handle_cmd ($check_ide_smart_cmd, '-1', '-n', '-d', $disk);
-    handle_cmd ($check_smart_cmd, '-i', 'ata', '-d', $disk);
+    handle_cmd ($check_smart_cmd, '-i', 'sat', '-d', $disk);
     handle_cmd ($check_smartmon_cmd, '-d', $disk);
 }
 }
