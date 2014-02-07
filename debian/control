@@ -19,4 +19,4 @@ Description: nagios plugin to check S.M.A.R.T. status of disks
  This nagios plugin checks advanced S.M.A.R.T. status (health, read
  errors/bad sectors, temperature and other factors) on multiple disks 
  automatically. It does that by running several external nagios checks, 
- also included. You can ignore unwanted checks for unwanted disks.
+ some of them included. You can ignore unwanted checks for unwanted disks.
