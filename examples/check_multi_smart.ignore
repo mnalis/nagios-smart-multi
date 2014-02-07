@@ -2,6 +2,6 @@
 # format is: <disk> <cmd1> [<cmd2>...]
 # for example:
 # /dev/sdf check_ide_smart check_smart check_smartmon
-# /dev/sdi check_ide_smart check_smartmon
+# /dev/sdi check_smartmon
 
-/dev/sdg check_ide_smart check_smartmon
+# /dev/sdg check_ide_smart check_smartmon
