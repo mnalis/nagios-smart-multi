@@ -138,7 +138,7 @@ if ($DEBUG > 1) {
 
 my $max_exit_level = 0;
 my $output_code = '';
-my $last_err = 'All OK.';
+my $last_err = 'All SMART checks OK.';
 my $err_count = 0;
 my $output_text = '';
 my $perfdata = '';
