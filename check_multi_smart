@@ -71,8 +71,7 @@ sub handle_cmd
 
 {
 my @disks = glob("/dev/[hs]d*[a-z]");
-# FIXME kludge delme
-@disks = qw (/dev/sdb /dev/sda /dev/sdg /dev/sdc);
+# FIXME kludge delme @disks = qw (/dev/sdb /dev/sda /dev/sdg /dev/sdc);
 
 
 foreach my $disk (@disks) {
@@ -81,8 +80,6 @@ foreach my $disk (@disks) {
     handle_cmd ($check_smartmon_cmd, '-d', $disk);
 }
 }
-
-# FIXME izvuci iz arraya i slozi vars
 
 if ($DEBUG > 1) {
   print "\n\n\n";
@@ -165,33 +162,12 @@ my $prev_output = '';
 my @prev_disks = ();
 @all = sort {($a->{msg} cmp $b->{msg}) || $a->{disk} cmp $b->{disk} } @all;	# sort by output message (and disk)
 
-sub longest_common_prefix {
-    # longest_common_prefix( $|@ ): returns $
-    # URLref: http://linux.seindal.dk/2005/09/09/longest-common-prefix-in-perl
-    # find longest common prefix of scalar list
-    my $prefix = shift;
-    for (@_) {
-    	chop $prefix while (! /^\Q$prefix\E/);
-    }
-    return $prefix;
-}
 
-
-# compresses list of /dev/sda, /dev/sdb, /dev/sdg into /dev/sd[abg] format
+# compresses list of /dev/sda, /dev/sdb, /dev/sdg into /dev/sd[abg] format [FIXME unfinished, currently return uncompressed list]
 sub compress_disks
 {
-  my $last_disk = '';
-  my $ret = '';
-
-#  push @_, '/dev/sdaa', '/dev/sdab', '/dev/sdx', '/dev/hde', '/dev/ccsiss/0', '/dev/cciss/1', '/dev/hdc';	# FIXME
-  my $prefix = longest_common_prefix(@_);
-  $DEBUG > 0 && print "prefix=$prefix sorted compress_disks=" . join(' ', sort @_) . "\n";
-  foreach my $d (sort @_) {
-    
-    $ret .= "$d ";
-    $last_disk = $d;
-  }
-  return $ret;
+  $DEBUG > 1 && print "sorted compress_disks=" . join(' ', sort @_) . "\n";
+  return join(', ', @_);
 }
 
 # merge multiple messages for different disks
