@@ -1,1 +1,5 @@
 *~
+debian/check-multi-smart.debhelper.log
+debian/check-multi-smart.substvars
+debian/check-multi-smart/
+debian/files
