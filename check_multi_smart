@@ -96,6 +96,8 @@ if ($DEBUG > 1) {
 
 my $max_exit_level = 0;
 my $output_code = '';
+my $last_err = 'All OK.';
+my $err_count = 0;
 my $output_text = '';
 my $perfdata = '';
 
@@ -145,6 +147,13 @@ for my $x (0 .. $#exit_disk) {
         $max_exit_level = $exit_value[$x];
         $output_code = $exit_code[$x];
     }
+    if ($exit_value[$x]) {
+        unless ($err_count++) {
+            $last_err = "$err_count msgs, last= " . $exit_txt[$x];
+            $last_err =~ s/\n/; /g;
+        }
+        $DEBUG > 1 && print "\t$err_count msgs, cur= " . $exit_txt[$x] . "\n";
+    }
     $last_msg .= ($last_msg?', ':'') . $exit_txt[$x];
     $last_perf .= ($last_perf?' ':'') . $exit_perf[$x];
     $DEBUG > 1 && print "x=$x, " . $exit_disk[$x] . "\n";
@@ -157,27 +166,34 @@ my $prev_output = '';
 my @prev_disks = ();
 @all = sort {($a->{msg} cmp $b->{msg}) || $a->{disk} cmp $b->{disk} } @all;	# sort by output message (and disk)
 
+# compresses list of /dev/sda, /dev/sdb, /dev/sdg into /dev/sd[abg] format
+sub compress_disks
+{
+  return join(', ', @_);
+}
 
 # merge multiple messages for different disks
 sub merge_msg
 {
     return unless $prev_output;
-    
+    $output_text .= compress_disks(@prev_disks) . ": $prev_output\n";
     $DEBUG > 1 && print "merge_msg prev=$prev_output for disks " . join(', ', @prev_disks) . "\n";
     @prev_disks = ();
 }
 
 for my $x (0 .. $#all) {
     if ($prev_output ne $all[$x]->{msg}) { merge_msg() }
-    $perfdata .= $all[$x]->{disk} . ': ' .  $all[$x]->{perf};
+    $perfdata .= $all[$x]->{disk} . ': ' .  $all[$x]->{perf} . "\n";
     $DEBUG > 2 && print "x=$x, disk=" . $all[$x]->{disk} . ", msg=" . $all[$x]->{msg} . "\n";
+    $DEBUG > 3 && print "x=$x, disk=" . $all[$x]->{disk} . ", perf=" . $all[$x]->{perf} . "\n";
     $prev_output = $all[$x]->{msg};
     push @prev_disks, $all[$x]->{disk};
 }
 merge_msg();
+chomp($output_text);
 
 #use Data::Dumper;
 #print Dumper(\@all);
 
-print "$output_code $output_text|$perfdata\n";
+print "$output_code $last_err\n$output_text|$perfdata\n";
 exit $max_exit_level;
