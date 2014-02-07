@@ -1,4 +1,4 @@
-The Debian Package check-multi-smart
+The Debian Package nagios-smart-multi
 ----------------------------
 
 Additional S.M.A.R.T. checks for nagios

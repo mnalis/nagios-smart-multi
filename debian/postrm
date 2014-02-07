@@ -1,5 +1,5 @@
 #!/bin/sh
-# postrm script for check-multi-smart
+# postrm script for nagios-smart-multi
 #
 # see: dh_installdeb(1)
 

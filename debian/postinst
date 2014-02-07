@@ -1,5 +1,5 @@
 #!/bin/sh
-# postinst script for check-multi-smart
+# postinst script for nagios-smart-multi
 #
 # see: dh_installdeb(1)
 

@@ -1,17 +1,17 @@
-Source: check-multi-smart
+Source: nagios-smart-multi
 Section: net
 Priority: extra
 Maintainer: Matija Nalis <mnalis-debian@axe.tomsoft.hr>
 Build-Depends: debhelper (>= 7.0.50~)
 Standards-Version: 3.8.4
 Homepage: <insert the upstream URL, if relevant>
-#Vcs-Git: git://git.debian.org/collab-maint/check-multi-smart.git
-#Vcs-Browser: http://git.debian.org/?p=collab-maint/check-multi-smart.git;a=summary
+#Vcs-Git: git://git.debian.org/collab-maint/nagios-smart-multi.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/nagios-smart-multi.git;a=summary
 
-Package: check-multi-smart
+Package: nagios-smart-multi
 Architecture: all
 Depends: ${misc:Depends}, ${perl:Depends}, ${python:Depends}, smartmontools
-Suggests: nagios3|nagios-nrpe-server
+Suggests: nagios3 | nagios-nrpe-server
 Enhances: nagios-plugins-basic
 Recommends: nagios-plugins-basic
 Description: nagios plugin to check S.M.A.R.T. status of disks

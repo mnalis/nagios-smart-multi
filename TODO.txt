@@ -10,4 +10,4 @@
 - stavi da se sudo koristi samo za smartctl (i to sa punim pathom!) i/ili
   za onaj nagios-basic plugin (vidi kako njegova dokumenatacija kaze prvo)
 
-- lintian ../check-multi-smart*.deb
+- lintian ../nagios-smart-multi*.deb
