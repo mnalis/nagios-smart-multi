@@ -16,7 +16,7 @@ our $VERSION='1.01';
 
 use strict;
 
-my @paths = qw( /home/mnalis/tomsoft_source/nagios-smart-multi /usr/local/bin /usr/local/sbin /usr/lib/nagios/plugins );	# NB hardcoded devel path will be removed on "make install"
+my @paths = qw( /home/mnalis/tomsoft_source/nagios-smart-multi /usr/lib/nagios/plugins /usr/local/bin /usr/local/sbin );	# NB hardcoded devel path will be removed on "make install"
 my $ignore_file = '/etc/check_multi_smart.ignore';
 
 my $check_ide_smart_cmd = 'check_ide_smart';	# from generic Debian Squeeze package nagios-plugins-basic
