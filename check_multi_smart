@@ -146,13 +146,12 @@ for my $x (0 .. $#exit_disk) {
     if (is_new_max($exit_value[$x], $max_exit_level)) {	# final result is worst result we've had (0=OK, 3=UNKNOWN, 1=WARNING, 2=CRITICAL);
         $max_exit_level = $exit_value[$x];
         $output_code = $exit_code[$x];
-    }
-    if ($exit_value[$x]) {
-        unless ($err_count++) {
-            $last_err = "$err_count msgs, last= " . $exit_txt[$x];
+        if ($exit_value[$x]) {	# in non-OK status (needed becase is_new_max(0,0) will return TRUE, etc)
+            $err_count++;
+            $last_err = "err(s). $err_count non-OK msgs, last= " . $exit_txt[$x];
             $last_err =~ s/\n/; /g;
+            $DEBUG > 1 && print "\t$err_count msgs, cur= " . $exit_txt[$x] . "\n";
         }
-        $DEBUG > 1 && print "\t$err_count msgs, cur= " . $exit_txt[$x] . "\n";
     }
     $last_msg .= ($last_msg?', ':'') . $exit_txt[$x];
     $last_perf .= ($last_perf?' ':'') . $exit_perf[$x];
