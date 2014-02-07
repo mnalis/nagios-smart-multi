@@ -6,6 +6,7 @@
 # Installation:
 # Add to sudoers: nagios ALL=(root) NOPASSWD:/usr/local/bin/check_multi_smart
 # Add to nrpe.cfg: command[check_multi_smart]=sudo /usr/local/bin/check_multi_smart
+# Add to /etc/check_multi_smart.ignore: /dev/sdx check_ide_smart check_smartmon -- to ignore that commands for that disk
 
 
 
@@ -15,6 +16,7 @@
 use strict;
 
 my @paths = qw( /root/nagios_moj_smart /usr/local/bin /usr/local/sbin /usr/lib/nagios/plugins );
+my $ignore_file = '/etc/check_multi_smart.ignore';
 
 my $check_ide_smart_cmd = 'check_ide_smart';	# from generic Debian Squeeze package nagios-plugins-basic
 my $check_smart_cmd = 'check_smart';		# patched on katara from http://exchange.nagios.org/directory/Plugins/System-Metrics/Storage-Subsystem/Check-SMART-status-modified/details
@@ -28,14 +30,37 @@ my @exit_code = ();
 my @exit_txt = ();
 my @exit_perf = ();
 
+my %IGNORE_CMDS = ();
+# parse  /etc/check_multi_smart.ignore config file
+# format: <disk> <cmd1> [cmd2 [cmd3] ...]
+sub parse_config_file
+{
+    return unless -e $ignore_file;	# it's OK if config file is missing, assume full checks in that case
+    open my $ign, '<', $ignore_file or die "can't read: $ignore_file: $!";
+    while (<$ign>) {
+      next if /^\s*#/;	# skip comments
+      next if /^\s*$/;	# skip empty lines
+      
+      my ($disk, @cmds) = split;
+      foreach my $cmd (@cmds) {
+          $IGNORE_CMDS{"${disk}_${cmd}"} = 1;
+          $DEBUG > 1 && print "ignore $cmd for $disk\n";
+      }
+    }
+    close $ign;
+}
+
+parse_config_file();
+
 # execute command if present
 sub exec_cmd
 {
     my $cmd = shift;
-    
-    foreach my $p (@paths) {
+
+    foreach my $p (@paths) {	# find full path
       if (-e "$p/$cmd") { $cmd = "$p/$cmd"; last; }
     }
+    
     $DEBUG > 1 && print "using full path for $cmd\n";
     
     my $args = join (' ', @_);
@@ -46,6 +71,12 @@ sub exec_cmd
 sub handle_cmd
 {
     my $disk = $_[$#_];	# FIXME kludge, get disk - assume always last parameter passed
+    my $cmd = $_[0];
+    
+    if ($IGNORE_CMDS{"${disk}_${cmd}"}) {
+        $DEBUG > 1 && print "ignoring $disk for command $cmd as specified in /etc/check_multi_smart.ignore\n";
+        return;
+    }
     
     my $output = exec_cmd (@_);
     my $exit_sig = $? & 127;
@@ -204,8 +235,6 @@ for my $x (0 .. $#all) {
 merge_msg();
 chomp($output_text);
 
-#use Data::Dumper;
-#print Dumper(\@all);
 
 print "$output_code $last_err\n$output_text|$perfdata\n";
 exit $max_exit_level;
