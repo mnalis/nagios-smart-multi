@@ -1,3 +1,29 @@
+nagios-smart-multi (1.05) wheezy; urgency=low
+
+  * depends on sudo
+
+ -- Matija Nalis (Tomsoft Debian repo) <mnalis-debian@axe.tomsoft.hr>  Mon, 07 Apr 2014 19:18:13 +0200
+
+nagios-smart-multi (1.04) wheezy; urgency=low
+
+  * NRPE server restart instead of reload in postinst, as there were reported problems (NRPE stopped working completely)
+
+ -- Matija Nalis (Tomsoft Debian repo) <mnalis-debian@axe.tomsoft.hr>  Mon, 10 Feb 2014 18:20:19 +0100
+
+nagios-smart-multi (1.03) wheezy; urgency=low
+
+  * add instructions for /etc/check_multi_smart.ignore
+
+ -- Matija Nalis (Tomsoft Debian repo) <mnalis-debian@axe.tomsoft.hr>  Sat, 08 Feb 2014 02:13:11 +0100
+
+nagios-smart-multi (1.02) wheezy; urgency=low
+
+  * prefer our sub-plugins in /usr/lib/nagios/plugins
+  * fix warning if empty cmdline
+  * path fixings
+
+ -- Matija Nalis (Tomsoft Debian repo) <mnalis-debian@axe.tomsoft.hr>  Sat, 08 Feb 2014 00:20:31 +0100
+
 nagios-smart-multi (1.01) wheezy; urgency=low
 
   * Initial Release.
