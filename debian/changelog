@@ -1,3 +1,11 @@
+nagios-smart-multi (1.06) wheezy; urgency=low
+
+  * ignore "Attribute Airflow_Temperature_Cel failed at In_the_past" warning
+    by default, as it is a fact of life and usually not directly involved
+    with disk bad health
+
+ -- Matija Nalis (Tomsoft Debian repo) <mnalis-debian@axe.tomsoft.hr>  Mon, 12 Jan 2015 20:18:08 +0100
+
 nagios-smart-multi (1.05) wheezy; urgency=low
 
   * depends on sudo

@@ -26,10 +26,11 @@ $ENV{'PATH'}='/bin:/usr/bin:/sbin:/usr/sbin';
 $ENV{'BASH_ENV'}=''; 
 $ENV{'ENV'}='';
 
-use vars qw($opt_d $opt_debug $opt_h $opt_i $opt_n $opt_v);
+use vars qw($opt_d $opt_debug $opt_h $opt_i $opt_n $opt_v $opt_oldtemp);
 Getopt::Long::Configure('bundling');
 GetOptions(
 	                  "debug"       => \$opt_debug,
+	                  "old-temp"	=> \$opt_oldtemp,
 	"d=s" => \$opt_d, "device=s"    => \$opt_d,
 	"h"   => \$opt_h, "help"        => \$opt_h,
 	"i=s" => \$opt_i, "interface=s" => \$opt_i,
@@ -212,9 +213,14 @@ if ($interface eq 'ata' or $interface eq 'sat'){
 		next unless $line =~ /^\s*\d+\s(\S+)\s+(?:\S+\s+){6}(\S+)\s+(\d+)/;
 		my ($attribute_name, $when_failed, $raw_value) = ($1, $2, $3);
 		if ($when_failed ne '-'){
-			push(@error_messages, "Attribute $attribute_name failed at $when_failed");
-			escalate_status('WARNING');
-			warn "(debug) parsed SMART attribute $attribute_name with error condition:\n$when_failed\n\n" if $opt_debug;
+	        	warn "(debug) parsed SMART attribute $attribute_name with error condition:\n$when_failed\n\n" if $opt_debug;
+		        if ($attribute_name ne 'Airflow_Temperature_Cel' or $when_failed ne 'In_the_past' or $opt_oldtemp) {
+        			push(@error_messages, "Attribute $attribute_name failed at $when_failed");
+	        		escalate_status('WARNING');
+                        } else {	# we want to ignore "airflow temperature failed in the past", and it is current message
+                                warn "(debug) ignoring \"airflow temperature failed in the past\" condition, as requsted.\n" if $opt_debug;
+        			push(@perfdata, "WARNING:$attribute_name=FAILED_$when_failed");
+                        }
 		}
 		# some attributes produce questionable data; no need to graph them
 		if (grep {$_ eq $attribute_name} ('Unknown_Attribute', 'Power_On_Minutes') ){
@@ -302,8 +308,9 @@ exit $ERRORS{$exit_status};
 
 sub print_help {
 	print_revision($basename,$revision);
-	print "Usage: $basename (--device=<SMART device> --interface=(sat|ata|scsi|megaraid)|-h|-v) [--debug]\n";
+	print "Usage: $basename (--device=<SMART device> --interface=(sat|ata|scsi|megaraid)|-h|-v) [--debug] [--old-temp]\n";
 	print "  --debug: show debugging information\n";
+	print "  --old-temp: do not ignore \"temperature failed in the past\" type errors\n";
 	print "  -d/--device: a device to be SMART monitored, eg /dev/sda\n";
 	print "  -i/--interface: ata, sat, scsi, megaraid, depending upon the device's interface type\n";
         print "  -n/--number: where in the argument megaraid, it is the physical disk number within the MegaRAID controller\n";
