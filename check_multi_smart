@@ -140,7 +140,7 @@ my @disks = glob("/dev/[hs]d*[a-z]");
 
 foreach my $disk (@disks) {
     if ($disk =~ m{^(/dev/[a-z0-9/]+)$}) { $disk = $1 } else { die "invalid disk $disk" }
-    handle_cmd ($check_ide_smart_cmd, '-1', '-n', '-d', $disk);
+    handle_cmd ($check_ide_smart_cmd, '-n', '-d', $disk);
     handle_cmd ($check_smart_cmd, '-i', 'sat', '-d', $disk);
     handle_cmd ($check_smartmon_cmd, '-d', $disk);
 }
