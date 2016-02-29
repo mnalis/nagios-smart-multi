@@ -20,3 +20,7 @@ install_etc:
 		
 clean:
 	find . -name "*~" -print0 | xargs -0r rm -f --
+
+mrproper:
+	dh clean
+	
