@@ -1,3 +1,9 @@
+nagios-smart-multi (1.08) wheezy; urgency=medium
+
+  * indicate which disk in last seen error
+
+ -- Matija Nalis (Tomsoft Debian repo) <mnalis-debian@axe.tomsoft.hr>  Wed, 03 Aug 2016 11:32:13 +0200
+
 nagios-smart-multi (1.07) jessie; urgency=low
 
   * check_ide_smart jessie: "-1" is broken

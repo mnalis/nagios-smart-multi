@@ -210,7 +210,7 @@ for my $x (0 .. $#exit_disk) {
         $output_code = $exit_code[$x];
         if ($exit_value[$x]) {	# in non-OK status (needed becase is_new_max(0,0) will return TRUE, etc)
             $err_count++;
-            $last_err = "err(s). $err_count non-OK msgs, last= " . $exit_txt[$x];
+            $last_err = "err(s). $err_count non-OK msgs, last is " . $exit_disk[$x] .": " . $exit_txt[$x];
             $last_err =~ s/\n/; /g;
             $DEBUG > 1 && print "\t$err_count msgs, cur= " . $exit_txt[$x] . "\n";
         }
