@@ -33,3 +33,4 @@ checkdeb:
 publish: all deb
 	cd .. && reprepro include wheezy `ls -1t *.changes | head -n 1`
 	git commit -a
+	git push
