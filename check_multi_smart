@@ -12,7 +12,7 @@
 
 # FIXME vidi dodatne atribute na http://en.wikipedia.org/wiki/S.M.A.R.T.
   
-our $VERSION='1.01';
+our $VERSION='1.02';
 
 use strict;
 
@@ -23,7 +23,8 @@ my $check_ide_smart_cmd = 'check_ide_smart';	# from generic Debian Squeeze packa
 my $check_smart_cmd = 'check_smart';		# patched on katara from http://exchange.nagios.org/directory/Plugins/System-Metrics/Storage-Subsystem/Check-SMART-status-modified/details
 my $check_smartmon_cmd = 'check_smartmon';	# patched on katara from https://www.monitoringexchange.org/inventory/Check-Plugins/Operating-Systems/Linux/check_smartmon
 
-my $DEBUG = 0;
+my $DEBUG = $ENV{'DEBUG'} || 0;
+if ($DEBUG =~ /^[0-9]+$/) { die "invalid debug value $DEBUG" }
 
 my @exit_disk = ();
 my @exit_value = ();

@@ -1,3 +1,9 @@
+nagios-smart-multi (1.10) wheezy; urgency=medium
+
+  * read $DEBUG from env if present
+
+ -- Matija Nalis (Tomsoft Debian repo) <mnalis-debian@axe.tomsoft.hr>  Fri, 02 Dec 2016 17:55:58 +0100
+
 nagios-smart-multi (1.09) wheezy; urgency=medium
 
   * fix counting non-OK msgs
