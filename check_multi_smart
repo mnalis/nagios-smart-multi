@@ -24,7 +24,7 @@ my $check_smart_cmd = 'check_smart';		# patched on katara from http://exchange.n
 my $check_smartmon_cmd = 'check_smartmon';	# patched on katara from https://www.monitoringexchange.org/inventory/Check-Plugins/Operating-Systems/Linux/check_smartmon
 
 my $DEBUG = $ENV{'DEBUG'} || 0;
-if ($DEBUG =~ /^[0-9]+$/) { die "invalid debug value $DEBUG" }
+if ($DEBUG !~ /^[0-9]+$/) { die "invalid debug value $DEBUG" }
 
 my @exit_disk = ();
 my @exit_value = ();
