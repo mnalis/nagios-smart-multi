@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 # -*- coding: iso8859-1 -*-
 #
@@ -51,9 +51,9 @@ def parseCmdLine(args):
         usage = "usage: %prog [options] device"
         version = "%%prog %s" % (__version__)
 
-        parser = OptionParser(usage=usage, version=version)
-	parser.add_option("-d", "--device", action="store", dest="device", default="", metavar="DEVICE",
-			help="device to check")
+        parser = OptionParser(usage="usage", version="version")
+        parser.add_option("-d", "--device", action="store", dest="device", default="", metavar="DEVICE",
+                        help="device to check")
         parser.add_option("-v", "--verbosity", action="store",
                         dest="verbosity", type="int", default=0,
                         metavar="LEVEL", help="set verbosity level to LEVEL; defaults to 0 (quiet), \
@@ -210,7 +210,7 @@ def createReturnInfo(healthStatus, temperature, warningThreshold,
 def exitWithMessage(value, message):
         """Exit with given value and status message."""
 
-        print message
+        print (message)
         sys.exit(value)
 # end
 
@@ -223,7 +223,7 @@ def vprint(level, message):
         """
 
         if level <= verbosity:
-                print message
+                print (message)
         # fi
 # end
 

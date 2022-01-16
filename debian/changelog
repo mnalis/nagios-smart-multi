@@ -1,3 +1,10 @@
+nagios-smart-multi (1.12) wheezy; urgency=medium
+
+  * convert check_smartmon to python3, to allow it to be used on Bullseye
+    and beyond
+
+ -- Matija Nalis (Tomsoft Debian repo) <mnalis-debian@axe.tomsoft.hr>  Sun, 16 Jan 2022 19:49:33 +0100
+
 nagios-smart-multi (1.11) wheezy; urgency=medium
 
   * fix debug check
