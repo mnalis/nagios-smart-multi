@@ -1,3 +1,9 @@
+nagios-smart-multi (1.14) wheezy; urgency=medium
+
+  * fix python2 incompatibility in check_smartmon
+
+ -- Matija Nalis (Tomsoft Debian repo) <mnalis-debian@axe.tomsoft.hr>  Sun, 06 Feb 2022 20:35:23 +0100
+
 nagios-smart-multi (1.13) wheezy; urgency=medium
 
   * lintian fixes
