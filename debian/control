@@ -15,6 +15,7 @@ Package: nagios-smart-multi
 Architecture: all
 Depends: ${misc:Depends}, ${perl:Depends}, python3, ${python3:Depends}, smartmontools, sudo
 Suggests: nagios-nrpe-server | icinga | icinga2 | nagios3
+Replaces: check-multi-smart
 Enhances: nagios-plugins-basic
 Recommends: nagios-plugins-basic
 Description: nagios plugin to check S.M.A.R.T. status of disks

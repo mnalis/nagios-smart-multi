@@ -1,3 +1,9 @@
+nagios-smart-multi (1.15) wheezy; urgency=medium
+
+  * replaces: check-multi-smart
+
+ -- Matija Nalis (Tomsoft Debian repo) <mnalis-debian@axe.tomsoft.hr>  Mon, 09 Jan 2023 19:16:02 +0100
+
 nagios-smart-multi (1.14) wheezy; urgency=medium
 
   * fix python2 incompatibility in check_smartmon
