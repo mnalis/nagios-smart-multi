@@ -1,5 +1,7 @@
 *~
 debian/files
+debian/.debhelper/
+debian/debhelper-build-stamp
 debian/nagios-smart-multi.debhelper.log
 debian/nagios-smart-multi.substvars
 debian/nagios-smart-multi/
