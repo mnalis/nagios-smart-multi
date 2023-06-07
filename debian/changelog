@@ -1,3 +1,10 @@
+nagios-smart-multi (1.17) wheezy; urgency=medium
+
+  * global package, do not depend on tomsoft-*; but it is 
+    SystemV init + systemd compatible
+
+ -- Matija Nalis (Tomsoft Debian repo) <mnalis-debian@axe.tomsoft.hr>  Thu, 08 Jun 2023 00:59:20 +0200
+
 nagios-smart-multi (1.16) wheezy; urgency=medium
 
   * systemd compatibility (invoke-rc.d --quiet)
