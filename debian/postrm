@@ -21,7 +21,7 @@ set -e
 
 case "$1" in
     purge|remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
-    	test -x /etc/init.d/nagios-nrpe-server && /etc/init.d/nagios-nrpe-server restart
+    	invoke-rc.d --quiet nagios-nrpe-server restart || true
     ;;
 
     *)
